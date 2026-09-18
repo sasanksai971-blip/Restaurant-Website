@@ -1,0 +1,42 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const products_1 = __importDefault(require("./routes/products"));
+const offers_1 = __importDefault(require("./routes/offers"));
+const cart_1 = __importDefault(require("./routes/cart"));
+const stores_1 = __importDefault(require("./routes/stores"));
+const orders_1 = __importDefault(require("./routes/orders"));
+const bookings_1 = __importDefault(require("./routes/bookings"));
+const bulkOrders_1 = __importDefault(require("./routes/bulkOrders"));
+const support_1 = __importDefault(require("./routes/support"));
+const addresses_1 = __importDefault(require("./routes/addresses"));
+dotenv_1.default.config();
+const app = (0, express_1.default)();
+const PORT = process.env.PORT || 3001;
+app.use((0, helmet_1.default)());
+app.use((0, cors_1.default)({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
+app.use(express_1.default.json());
+app.use('/api', auth_1.default);
+app.use('/api', products_1.default);
+app.use('/api', offers_1.default);
+app.use('/api', cart_1.default);
+app.use('/api', stores_1.default);
+app.use('/api', orders_1.default);
+app.use('/api', bookings_1.default);
+app.use('/api', bulkOrders_1.default);
+app.use('/api', support_1.default);
+app.use('/api', addresses_1.default);
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

@@ -1,0 +1,25 @@
+{
+  "name": "pizzarush-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack Pizza Restaurant Ordering Platform",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "seed": "cd backend && npm run db:seed"
+  },
+  "keywords": [
+    "pizza",
+    "restaurant",
+    "ordering",
+    "full-stack",
+    "react",
+    "express",
+    "prisma"
+  ],
+  "author": "PizzaRush Team",
+  "license": "MIT"
+}
