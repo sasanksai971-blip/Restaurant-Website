@@ -9,7 +9,7 @@ import {
   Tag,
   Check,
   ShieldCheck,
-  ChevronRight,
+  Edit2,
   Sparkles,
 } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
@@ -90,6 +90,59 @@ export const CartPage: React.FC = () => {
     }
   };
 
+  // Helper to parse custom pizza item
+  const renderCustomizationDetails = (customizationStr?: string | null) => {
+    if (!customizationStr) return null;
+
+    try {
+      if (customizationStr.startsWith('{')) {
+        const parsed = JSON.parse(customizationStr);
+        if (parsed.productType === 'custom-pizza' && parsed.customPizzaConfig) {
+          const cfg = parsed.customPizzaConfig;
+          const toppingsList = cfg.toppings?.map((t: any) => `${t.topping.name}${t.quantity === 'extra' ? ' (Extra)' : ''}`).join(' • ');
+          const extrasList = cfg.extras?.map((e: any) => `${e.extra.name} ×${e.quantity}`).join(', ');
+
+          return (
+            <div className="text-[11px] text-gray-500 mt-1 space-y-0.5">
+              <p className="font-semibold text-gray-700">
+                {cfg.size?.name} • {cfg.crust?.name} • {cfg.sauce?.name} • {cfg.cheese?.name}
+              </p>
+              {toppingsList && (
+                <p className="text-gray-600">
+                  <strong className="text-gray-700">Toppings:</strong> {toppingsList}
+                </p>
+              )}
+              {extrasList && (
+                <p className="text-gray-600">
+                  <strong className="text-gray-700">Extras:</strong> {extrasList}
+                </p>
+              )}
+            </div>
+          );
+        }
+      }
+    } catch (e) {
+      // Fall back to plain string
+    }
+
+    return (
+      <p className="text-[11px] text-gray-500 mt-0.5 font-medium">
+        {customizationStr}
+      </p>
+    );
+  };
+
+  // Check if item is a custom pizza
+  const isCustomPizza = (customizationStr?: string | null) => {
+    if (!customizationStr || !customizationStr.startsWith('{')) return false;
+    try {
+      const parsed = JSON.parse(customizationStr);
+      return parsed.productType === 'custom-pizza';
+    } catch (e) {
+      return false;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
@@ -128,103 +181,148 @@ export const CartPage: React.FC = () => {
             </div>
             <h3 className="text-xl font-black text-gray-900">Your cart is empty</h3>
             <p className="text-xs sm:text-sm text-gray-500 max-w-sm mx-auto">
-              Good food is always just a few taps away. Explore our chef-crafted pizzas and hot appetizers!
+              Good food is always just a few taps away. Explore our chef-crafted pizzas or build your own!
             </p>
-            <Link
-              to="/menu"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#E53935] hover:bg-red-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-sm uppercase tracking-wide cursor-pointer"
-            >
-              <span>Explore Pizza Menu</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                to="/build-your-pizza"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-sm uppercase tracking-wide cursor-pointer"
+              >
+                <span>Build Your Own Pizza</span>
+                <Sparkles className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/menu"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#E53935] hover:bg-red-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-sm uppercase tracking-wide cursor-pointer"
+              >
+                <span>Explore Pizza Menu</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            {/* Left Col: Cart Items List (Spec Section 33) */}
+            {/* Left Col: Cart Items List (Spec Section 16 & 33) */}
             <div className="lg:col-span-2 space-y-4">
               <div className="bg-white rounded-3xl p-4 sm:p-6 border border-gray-100 shadow-xs divide-y divide-gray-100">
-                {items.map((item) => (
-                  <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex items-center gap-4">
-                    {/* Item Image */}
-                    <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                      <img
-                        src={item.product.image || 'https://images.unsplash.com/photo-1565299624096-d0d9bbf4ab22?w=200&q=80'}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                {items.map((item) => {
+                  const custom = isCustomPizza(item.customization);
 
-                    {/* Item Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        {/* Veg/Non-veg dot */}
-                        <div
-                          className={`w-3 h-3 border-2 rounded-xs flex items-center justify-center ${
-                            item.product.isVeg ? 'border-green-600' : 'border-red-600'
-                          }`}
-                        >
+                  return (
+                    <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex items-start gap-4">
+                      {/* Item Image */}
+                      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100 mt-1">
+                        <img
+                          src={item.product?.image || 'https://images.unsplash.com/photo-1565299624096-d0d9bbf4ab22?w=200&q=80'}
+                          alt={item.product?.name || 'Pizza'}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Item Details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          {/* Veg/Non-veg dot */}
                           <div
-                            className={`w-1 h-1 rounded-full ${
-                              item.product.isVeg ? 'bg-green-600' : 'bg-red-600'
+                            className={`w-3 h-3 border-2 rounded-xs flex items-center justify-center ${
+                              item.product?.isVeg ? 'border-green-600' : 'border-red-600'
                             }`}
-                          />
+                          >
+                            <div
+                              className={`w-1 h-1 rounded-full ${
+                                item.product?.isVeg ? 'bg-green-600' : 'bg-red-600'
+                              }`}
+                            />
+                          </div>
+                          <h4 className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                            {item.product?.name}
+                          </h4>
+                          {custom && (
+                            <span className="px-2 py-0.5 bg-amber-100 text-amber-900 text-[10px] font-black uppercase rounded-md">
+                              Custom Pizza
+                            </span>
+                          )}
                         </div>
-                        <h4 className="font-bold text-gray-900 text-sm sm:text-base truncate">
-                          {item.product.name}
-                        </h4>
+
+                        {/* Detailed Customizations Display (Spec Section 16) */}
+                        {renderCustomizationDetails(item.customization)}
+
+                        <div className="flex items-center gap-3 mt-2">
+                          <span className="text-xs sm:text-sm font-black text-gray-900">
+                            ₹{item.price} each
+                          </span>
+
+                          {/* Edit Custom Pizza Shortcut Button (Spec Section 16) */}
+                          {custom && (
+                            <Link
+                              to={`/build-your-pizza?editItemId=${item.id}`}
+                              className="text-[11px] font-bold text-[#E53935] hover:underline flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md transition-colors"
+                            >
+                              <Edit2 className="w-3 h-3" />
+                              <span>Edit Configuration</span>
+                            </Link>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.id)}
+                            className="text-[11px] font-bold text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Customizations */}
-                      {item.customization && (
-                        <p className="text-[11px] text-gray-500 mt-0.5 font-medium">
-                          {item.customization}
-                        </p>
-                      )}
+                      {/* Quantity Controls & Total */}
+                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                        <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-0.5">
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="w-7 h-7 rounded-lg text-gray-600 hover:bg-white hover:text-red-600 flex items-center justify-center transition-colors"
+                            aria-label="Decrease"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="w-6 text-center text-xs font-black text-gray-900">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="w-7 h-7 rounded-lg bg-[#E53935] text-white hover:bg-red-700 flex items-center justify-center transition-colors"
+                            aria-label="Increase"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
 
-                      <div className="text-xs sm:text-sm font-black text-gray-900 mt-1">
-                        ₹{item.price} each
+                        <div className="text-sm font-black text-gray-950">
+                          ₹{item.price * item.quantity}
+                        </div>
                       </div>
                     </div>
-
-                    {/* Quantity Controls & Total */}
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-0.5">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 rounded-lg text-gray-600 hover:bg-white hover:text-red-600 flex items-center justify-center transition-colors"
-                          aria-label="Decrease"
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="w-6 text-center text-xs font-black text-gray-900">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 rounded-lg bg-[#E53935] text-white hover:bg-red-700 flex items-center justify-center transition-colors"
-                          aria-label="Increase"
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
-                      </div>
-
-                      <div className="text-sm font-black text-gray-950">
-                        ₹{item.price * item.quantity}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Add more items prompt */}
-              <div className="bg-white rounded-2xl p-4 border border-gray-100 flex items-center justify-between">
-                <span className="text-xs text-gray-600 font-medium">Want to add drinks or extra sides?</span>
-                <Link
-                  to="/menu"
-                  className="text-xs font-bold text-[#E53935] hover:underline flex items-center gap-1"
-                >
-                  <span>+ Add More Items</span>
-                </Link>
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-xs text-gray-600 font-medium">Want to add another pizza or extra drinks?</span>
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/build-your-pizza"
+                    className="text-xs font-bold text-amber-700 hover:underline flex items-center gap-1"
+                  >
+                    <span>+ Build Another Pizza</span>
+                  </Link>
+                  <span className="text-gray-300">•</span>
+                  <Link
+                    to="/menu"
+                    className="text-xs font-bold text-[#E53935] hover:underline flex items-center gap-1"
+                  >
+                    <span>+ Add From Menu</span>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -286,7 +384,7 @@ export const CartPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Price Summary Breakdown (Spec Section 33) */}
+              {/* Price Summary Breakdown */}
               <div className="bg-white rounded-3xl p-5 sm:p-6 border border-gray-100 shadow-xs space-y-4">
                 <h4 className="font-extrabold text-sm text-gray-900 uppercase tracking-wider">
                   Bill Details

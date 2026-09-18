@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { User as UserIcon, ShoppingBag, MapPin, Navigation, Search, Menu as MenuIcon, PhoneCall } from 'lucide-react';
+import { User as UserIcon, ShoppingBag, MapPin, Navigation, Search, Menu as MenuIcon, PhoneCall, Sparkles, ChefHat } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useLocationStore } from '../store/locationStore';
 import { useCartStore } from '../store/cartStore';
@@ -25,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const isMenuPage = location.pathname.startsWith('/menu');
   const isOffersPage = location.pathname.startsWith('/deals') || location.pathname.startsWith('/offers');
+  const isCustomizerPage = location.pathname.startsWith('/build-your-pizza');
 
   return (
     <header className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100">
@@ -74,8 +75,20 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Right Area: Search, Profile, Cart */}
+          {/* Right Area: Build Pizza CTA, Search, Profile, Cart */}
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            {/* Prominent "Build Your Own Pizza" Shortcut Button (Spec Section 1) */}
+            <Link
+              to="/build-your-pizza"
+              className="hidden sm:flex items-center gap-2 px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold rounded-xl text-xs shadow-md transition-all group"
+            >
+              <ChefHat className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+              <span>Build Your Pizza</span>
+              <span className="bg-white/25 text-[10px] px-1.5 py-0.2 rounded-full uppercase font-black">
+                Interactive
+              </span>
+            </Link>
+
             {/* Search shortcut button */}
             <button
               onClick={onOpenSearch || (() => navigate('/menu'))}
@@ -86,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden md:inline">Search Pizza...</span>
             </button>
 
-            {/* Profile Button (Specification: Profile area with White background, Grey text) */}
+            {/* Profile Button */}
             <button
               onClick={onOpenProfile}
               className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 text-gray-600 rounded-xl border border-gray-200 shadow-sm transition-all"
@@ -122,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Persistent Navigation: Menu & Offers (Specification: Transparent appearance, Bold text) */}
+      {/* Persistent Navigation: Menu, Build Pizza & Offers */}
       <div className="bg-white/95 backdrop-blur-sm border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <nav className="flex items-center gap-1 sm:gap-6">
@@ -138,6 +151,19 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Menu</span>
             </Link>
 
+            {/* Build Your Own Pizza Navigation Link */}
+            <Link
+              to="/build-your-pizza"
+              className={`py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-bold tracking-wide uppercase flex items-center gap-1.5 transition-all border-b-2 ${
+                isCustomizerPage
+                  ? 'border-[#E53935] text-[#E53935]'
+                  : 'border-transparent text-gray-800 hover:text-[#E53935]'
+              }`}
+            >
+              <ChefHat className="w-4 h-4 text-amber-500" />
+              <span>Build Your Own Pizza</span>
+            </Link>
+
             <Link
               to="/deals"
               className={`py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-bold tracking-wide uppercase flex items-center gap-1.5 transition-all border-b-2 ${
@@ -151,19 +177,11 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
 
             <Link
-              to="/bulk-order"
-              className="hidden md:flex py-2.5 px-3 text-xs sm:text-sm font-bold tracking-wide uppercase text-gray-600 hover:text-gray-900 transition-colors"
+              to="/admin/customizer"
+              className="hidden xl:flex py-2.5 px-3 text-xs sm:text-sm font-bold tracking-wide uppercase text-gray-400 hover:text-gray-900 transition-colors"
             >
-              <span>🎉</span>
-              <span>Bulk Order</span>
-            </Link>
-
-            <Link
-              to="/nutrition"
-              className="hidden lg:flex py-2.5 px-3 text-xs sm:text-sm font-bold tracking-wide uppercase text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <span>🥗</span>
-              <span>Nutrition</span>
+              <span>⚙️</span>
+              <span>Kitchen Admin</span>
             </Link>
           </nav>
 

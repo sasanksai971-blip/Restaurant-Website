@@ -18,6 +18,8 @@ import { BulkOrderPage } from './pages/BulkOrderPage';
 import { NutritionPage } from './pages/NutritionPage';
 import { TermsPage } from './pages/TermsPage';
 import { SupportPage } from './pages/SupportPage';
+import { BuildPizzaPage } from './pages/BuildPizzaPage';
+import { AdminCustomizerPage } from './pages/AdminCustomizerPage';
 
 export function App() {
   const { fetchMe, token } = useAuthStore();
@@ -37,6 +39,8 @@ export function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/deals" element={<OffersPage />} />
         <Route path="/offers" element={<OffersPage />} />
+        <Route path="/build-your-pizza" element={<BuildPizzaPage />} />
+        <Route path="/admin/customizer" element={<AdminCustomizerPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/track/:id" element={<OrderTrackingPage />} />

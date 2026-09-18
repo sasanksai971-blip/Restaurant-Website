@@ -12,6 +12,7 @@ import bookingsRoutes from './routes/bookings';
 import bulkOrdersRoutes from './routes/bulkOrders';
 import supportRoutes from './routes/support';
 import addressesRoutes from './routes/addresses';
+import customPizzaRoutes from './routes/customPizza';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use('/api', bookingsRoutes);
 app.use('/api', bulkOrdersRoutes);
 app.use('/api', supportRoutes);
 app.use('/api', addressesRoutes);
+app.use('/api', customPizzaRoutes);
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);

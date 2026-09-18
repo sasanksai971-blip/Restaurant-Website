@@ -146,6 +146,20 @@ export const MenuPage: React.FC = () => {
 
               {/* Horizontal Scroll on Mobile / Vertical on Desktop */}
               <div className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 hide-scrollbar -mx-2 px-2 lg:mx-0 lg:px-0">
+                {/* Dedicated Build Your Own Pizza Action in Sidebar */}
+                <button
+                  onClick={() => navigate('/build-your-pizza')}
+                  className="px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-black bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-between whitespace-nowrap flex-shrink-0 lg:w-full cursor-pointer hover:scale-[1.02]"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🍕</span>
+                    <span>Build Your Own</span>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold bg-amber-400 text-gray-950 px-1.5 py-0.5 rounded-md">
+                    Custom
+                  </span>
+                </button>
+
                 <button
                   onClick={() => handleSelectCategory('all')}
                   className={`px-3.5 py-2.5 rounded-xl text-left text-xs sm:text-sm font-bold transition-all flex items-center justify-between whitespace-nowrap flex-shrink-0 lg:w-full cursor-pointer ${

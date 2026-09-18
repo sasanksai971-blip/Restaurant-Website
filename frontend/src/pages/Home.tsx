@@ -178,6 +178,44 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
+        {/* Build Your Own Pizza Feature Showcase Banner */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 text-white shadow-xl p-6 sm:p-8">
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-3 max-w-xl text-center md:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-black uppercase tracking-wider text-amber-200">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Interactive 2D Pizza Studio</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+                  Build Your Own Pizza <span className="text-amber-200">Just The Way You Like It!</span>
+                </h3>
+                <p className="text-sm text-red-50 leading-relaxed">
+                  Choose from 3 sizes, 4 artisanal crusts, rich gourmet sauces, stretchy cheeses, and 17+ fresh toppings. Watch your pizza come to life in real-time with our interactive live visualizer!
+                </p>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1 text-xs font-semibold text-amber-100">
+                  <span className="bg-black/20 px-2.5 py-1 rounded-lg">🍕 3 Sizes</span>
+                  <span className="bg-black/20 px-2.5 py-1 rounded-lg">🧀 Cheese Burst & Stuffed</span>
+                  <span className="bg-black/20 px-2.5 py-1 rounded-lg">🌶️ 17+ Fresh Toppings</span>
+                  <span className="bg-black/20 px-2.5 py-1 rounded-lg">✨ Chef Presets</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <button
+                  onClick={() => navigate('/build-your-pizza')}
+                  className="px-8 py-4 bg-white hover:bg-amber-50 text-red-600 text-base font-black rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2.5 cursor-pointer whitespace-nowrap"
+                >
+                  <Utensils className="w-5 h-5 text-red-600" />
+                  <span>Start Customizing</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <span className="text-xs text-white/80 font-medium">Starting at just ₹199</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 7. What Are You Craving For? (Spec Section 22: 12 Category Cards) */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-6">

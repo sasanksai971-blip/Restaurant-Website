@@ -17,6 +17,7 @@ const bookings_1 = __importDefault(require("./routes/bookings"));
 const bulkOrders_1 = __importDefault(require("./routes/bulkOrders"));
 const support_1 = __importDefault(require("./routes/support"));
 const addresses_1 = __importDefault(require("./routes/addresses"));
+const customPizza_1 = __importDefault(require("./routes/customPizza"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
@@ -33,6 +34,7 @@ app.use('/api', bookings_1.default);
 app.use('/api', bulkOrders_1.default);
 app.use('/api', support_1.default);
 app.use('/api', addresses_1.default);
+app.use('/api', customPizza_1.default);
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
